@@ -106,7 +106,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     /**
      * Gets the whole Table
-     * @param tableName 
+     * @param tableName
      */
     public Cursor getTable(String tableName) {
         this.sqLiteDatabase = this.getReadableDatabase();

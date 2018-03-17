@@ -17,6 +17,7 @@ public class Product {
     private long _id;
     private String _name;
     private String _description;
+    private String test;
 
     // Methods
     @Override
