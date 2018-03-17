@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\robsen\StudioProjects\shoppy\app\app.iml" filepath="C:\Users\robsen\StudioProjects\shoppy\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/shoppy.iml" filepath="$PROJECT_DIR$/shoppy.iml" />
+      <module fileurl="file://C:\Users\robsen\StudioProjects\shoppy\shoppy.iml" filepath="C:\Users\robsen\StudioProjects\shoppy\shoppy.iml" />
     </modules>
   </component>
 </project>
