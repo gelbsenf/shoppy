@@ -43,7 +43,7 @@ public class ProductContent {
         Cursor productCursor = dbHelper.getTable(ProductContract.TABLENAME);
         for (productCursor.moveToFirst(); !productCursor.isAfterLast(); productCursor.moveToNext()) {
             Product productToAdd = new Product(
-                    productCursor.getLong(productCursor.getColumnIndex(ProductContract.FIELDS.ID)),
+                    productCursor.getInt(productCursor.getColumnIndex(ProductContract.FIELDS.ID)),
                     productCursor.getString(productCursor.getColumnIndex(ProductContract.FIELDS.NAME)),
                     productCursor.getString(productCursor.getColumnIndex(ProductContract.FIELDS.DESCRIPTION))
             );
@@ -57,16 +57,14 @@ public class ProductContent {
         this.item_Map.put(String.valueOf(product.get_id()), product);
     }
 
-    public static Product createProduct(int position) {
+    public Product createProduct(int position) {
         return new Product(position, "Item " + position, makeDetails(position));
     }
 
-    private static String makeDetails(int position) {
+    private String makeDetails(int position) {
         StringBuilder builder = new StringBuilder();
         builder.append("Details about Item: ").append(position);
-        for (int i = 0; i < position; i++) {
-            builder.append("\nMore details information here.");
-        }
+        builder.append(this.items.get(position).get_description());
         return builder.toString();
     }
 

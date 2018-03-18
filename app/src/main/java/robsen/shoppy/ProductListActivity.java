@@ -2,7 +2,6 @@ package robsen.shoppy;
 
 import android.content.Context;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -15,12 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import robsen.shoppy.objects.Product;
 import robsen.shoppy.objects.ProductContent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,7 +38,7 @@ public class ProductListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
-    private ProductContent productContent;
+    private ProductContent _productContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,32 +49,6 @@ public class ProductListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        FloatingActionButton fabAddProduct = (FloatingActionButton) findViewById(R.id.fabInsertProduct);
-        fabAddProduct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                final Product newProduct = new Product("test3", "Beschreibung3");
-                if (newProduct.save(ProductListActivity.this)) {
-
-                    // Message about success, UNDO Action deletes entry
-                    Snackbar.make(view, newProduct.get_description() + " added successfully", Snackbar.LENGTH_LONG)
-                            .setAction("UNDO", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    newProduct.delete(ProductListActivity.this);
-                                    Snackbar.make(view, newProduct.get_description() + " deleted!", Snackbar.LENGTH_LONG);
-                                }
-                            }).show();
-
-                } else  {
-                    // Todo: Pop Error on UI
-                    Log.e(TAG, "ERROR while creating new Product, onClick() of fabAddProduct");
-                }
-
-            }
-        });
-
         if (findViewById(R.id.product_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
@@ -84,30 +57,57 @@ public class ProductListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        View recyclerView = findViewById(R.id.product_list);
+        final View recyclerView = findViewById(R.id.product_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
+
+        FloatingActionButton fabAddProduct = (FloatingActionButton) findViewById(R.id.fabInsertProduct);
+        fabAddProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final Product newProductToAdd = new Product("test3", "Beschreibung3");
+                if (newProductToAdd.save(ProductListActivity.this)) {
+
+                    // Message about success, UNDO Action deletes entry
+                    Snackbar.make(view, newProductToAdd.get_description() + " added successfully", Snackbar.LENGTH_LONG)
+                            .setAction("UNDO", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    newProductToAdd.delete(ProductListActivity.this);
+                                    Snackbar.make(view, newProductToAdd.get_description() + " deleted!", Snackbar.LENGTH_LONG);
+                                }
+
+
+                            }).show();
+                    setupRecyclerView((RecyclerView) recyclerView);
+                } else  {
+                    // Todo: Pop Error on UI
+                    Log.e(TAG, "ERROR while creating new Product, onClick() of fabAddProduct");
+                }
+            }
+        });
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        this.productContent = new ProductContent(this);
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, productContent.getItems(), mTwoPane));
+        this._productContent = new ProductContent(this);
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, _productContent.getItems(), mTwoPane));
     }
 
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final ProductListActivity mParentActivity;
-        private final List<Product> mValues;
-        private final boolean mTwoPane;
+        private final List<Product> mProducts;
+        private final boolean mIsTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 Product item = (Product) view.getTag();
-                if (mTwoPane) {
+                if (mIsTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(ProductDetailFragment.ARG_ITEM_ID, item.get_name());
+                    arguments.putString(ProductDetailFragment.ARG_ID, String.valueOf(item.get_id()));
                     ProductDetailFragment fragment = new ProductDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -116,7 +116,7 @@ public class ProductListActivity extends AppCompatActivity {
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, ProductDetailActivity.class);
-                    intent.putExtra(ProductDetailFragment.ARG_ITEM_ID, item.get_name());
+                    intent.putExtra(ProductDetailFragment.ARG_ID, item.get_id());
 
                     context.startActivity(intent);
                 }
@@ -126,9 +126,9 @@ public class ProductListActivity extends AppCompatActivity {
         SimpleItemRecyclerViewAdapter(ProductListActivity parent,
                                       List<Product> items,
                                       boolean twoPane) {
-            mValues = items;
+            mProducts = items;
             mParentActivity = parent;
-            mTwoPane = twoPane;
+            mIsTwoPane = twoPane;
         }
 
         @Override
@@ -139,28 +139,40 @@ public class ProductListActivity extends AppCompatActivity {
         }
 
         @Override
+        /**
+         * Fills the ListView with ProductContent
+         */
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).get_name());
-            holder.mContentView.setText(mValues.get(position).get_name());
+            holder.mIdView.setText(String.valueOf(mProducts.get(position).get_id()));
+            holder.mNameView.setText(mProducts.get(position).get_name());
+            holder.mContentView.setText(mProducts.get(position).get_description());
 
-            holder.itemView.setTag(mValues.get(position));
+            holder.itemView.setTag(mProducts.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
         }
 
         @Override
         public int getItemCount() {
-            return mValues.size();
+            return mProducts.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
             final TextView mIdView;
+            final TextView mNameView;
             final TextView mContentView;
 
-            ViewHolder(View view) {
+            public ViewHolder(View view) {
                 super(view);
-                mIdView = (TextView) view.findViewById(R.id.id_text);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                mIdView = (TextView) view.findViewById(R.id.textView_id);
+                mNameView = (TextView) view.findViewById(R.id.textView_name);
+                mContentView = (TextView) view.findViewById(R.id.textView_description);
+            }
+
+            // Update View with added content
+            public void updateViewHolder(ArrayList<Product> productList) {
+                notifyDataSetChanged();
             }
         }
+
     }
 }
