@@ -14,10 +14,10 @@ import robsen.shoppy.wrapper.ProductContract;
 public class Product {
     private final static String TAG = "PRODUCT OPERERATIONS";
     // Properties
-    private long _id;
+    private int _id;
     private String _name;
     private String _description;
-    private String test;
+    private Context _context;
 
     // Methods
     @Override
@@ -25,11 +25,11 @@ public class Product {
         return this._name;
     }
 
-    public long get_id() {
+    public int get_id() {
         return _id;
     }
 
-    public void set_id(long _id) {
+    public void set_id(int _id) {
         this._id = _id;
     }
 
@@ -83,6 +83,13 @@ public class Product {
         return true;
     }
 
+    private void fillInformation(){
+        // Todo: Fill information from DB
+        this._name = "dummy Name to fill";
+        this._description = "dummy Descritpiotn to fill";
+    }
+
+
     // Constructors
     /**
      * For loading in List
@@ -90,7 +97,7 @@ public class Product {
      * @param name
      * @param description
      */
-    public Product(long id, String name, String description) {
+    public Product(int id, String name, String description) {
         this._id = id;
         this._name = name;
         this._description = description;
@@ -105,6 +112,15 @@ public class Product {
         this._id = 0;
         this._name = name;
         this._description = description;
+    }
+
+    /**
+     * Get ProductInfo by ID
+     * @param id
+     */
+    public Product(int id) {
+        this._id = id;
+        fillInformation();
     }
 
 }

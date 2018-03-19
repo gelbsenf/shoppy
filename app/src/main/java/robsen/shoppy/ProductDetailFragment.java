@@ -1,7 +1,6 @@
 package robsen.shoppy;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,12 +21,12 @@ public class ProductDetailFragment extends Fragment {
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_ID = "item_id";
 
     /**
      * The dummy content this fragment is presenting.
      */
-    private Product mItem;
+    private Product _mItem;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -40,18 +39,20 @@ public class ProductDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
+        if (getArguments().containsKey(ARG_ID)) {
+
 
             ProductContent productContent = new ProductContent(getContext());
-            mItem = productContent.getItem_Map().get(getArguments().getString(ARG_ITEM_ID));
-
+            _mItem = productContent.getItem_Map().get(getArguments().getString(ARG_ID));
+            if (_mItem == null) {
+                if (!this.getActivity().getIntent().getExtras().isEmpty()) {
+                    _mItem = new Product(Integer.getInteger(this.getActivity().getIntent().getExtras().get(ARG_ID).toString()));
+                }
+            }
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.get_description());
+                appBarLayout.setTitle(_mItem.get_description());
             }
         }
     }
@@ -62,8 +63,8 @@ public class ProductDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.product_detail, container, false);
 
         // Show the dummy content as text in a TextView.
-        if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.product_detail)).setText(mItem.get_description());
+        if (_mItem != null) {
+            ((TextView) rootView.findViewById(R.id.product_detail)).setText(_mItem.get_description());
         }
 
         return rootView;

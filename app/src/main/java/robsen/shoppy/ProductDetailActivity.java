@@ -11,8 +11,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
-import robsen.shoppy.objects.Product;
-
 /**
  * An activity representing a single Product detail screen. This
  * activity is only used on narrow width devices. On tablet-size devices,
@@ -59,8 +57,8 @@ public class ProductDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(ProductDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(ProductDetailFragment.ARG_ITEM_ID));
+            arguments.putString(ProductDetailFragment.ARG_ID,
+                    getIntent().getStringExtra(ProductDetailFragment.ARG_ID));
             ProductDetailFragment fragment = new ProductDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

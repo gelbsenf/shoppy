@@ -77,10 +77,10 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param tableName
      * @param contentValues
      */
-    public long addData(String tableName, ContentValues contentValues) {
+    public int addData(String tableName, ContentValues contentValues) {
         this.sqLiteDatabase = this.getWritableDatabase();
         try {
-            return this.sqLiteDatabase.insert(tableName, null, contentValues);
+            return (int)this.sqLiteDatabase.insert(tableName, null, contentValues);
         } catch (Exception ex) {
             Log.e(TAG, "ERROR trying to write to: " + tableName);
         }
