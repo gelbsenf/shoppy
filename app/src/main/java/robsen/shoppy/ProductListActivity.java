@@ -1,5 +1,6 @@
 package robsen.shoppy;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -65,26 +66,10 @@ public class ProductListActivity extends AppCompatActivity {
         fabAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                final Product newProductToAdd = new Product("test3", "Beschreibung3");
-                if (newProductToAdd.save(ProductListActivity.this)) {
-
-                    // Message about success, UNDO Action deletes entry
-                    Snackbar.make(view, newProductToAdd.get_description() + " added successfully", Snackbar.LENGTH_LONG)
-                            .setAction("UNDO", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    newProductToAdd.delete(ProductListActivity.this);
-                                    Snackbar.make(view, newProductToAdd.get_description() + " deleted!", Snackbar.LENGTH_LONG);
-                                }
-
-
-                            }).show();
-                    setupRecyclerView((RecyclerView) recyclerView);
-                } else  {
-                    // Todo: Pop Error on UI
-                    Log.e(TAG, "ERROR while creating new Product, onClick() of fabAddProduct");
-                }
+                // initialize new ProductFillActivity with intent to create new Product
+                 Intent intentAddProduct = new Intent(getApplicationContext(), ProductFillActivity.class);
+                 intentAddProduct.putExtra("robsen.shoppy.NEW", true);
+                 startActivity(intentAddProduct);
             }
         });
     }

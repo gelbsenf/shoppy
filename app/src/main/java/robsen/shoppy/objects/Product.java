@@ -59,6 +59,7 @@ public class Product {
 
         Log.e(TAG,"saving Product...");
         ContentValues contentValues = new ContentValues();
+        contentValues.put(ProductContract.FIELDS.ID, this._id);
         contentValues.put(ProductContract.FIELDS.NAME, this._name);
         contentValues.put(ProductContract.FIELDS.DESCRIPTION, this._description);
 
@@ -109,7 +110,6 @@ public class Product {
      * @param description
      */
     public Product(String name, String description) {
-        this._id = 0;
         this._name = name;
         this._description = description;
     }

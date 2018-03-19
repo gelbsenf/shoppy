@@ -57,10 +57,6 @@ public class ProductContent {
         this.item_Map.put(String.valueOf(product.get_id()), product);
     }
 
-    public Product createProduct(int position) {
-        return new Product(position, "Item " + position, makeDetails(position));
-    }
-
     private String makeDetails(int position) {
         StringBuilder builder = new StringBuilder();
         builder.append("Details about Item: ").append(position);

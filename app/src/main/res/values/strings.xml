@@ -2,4 +2,11 @@
     <string name="app_name">shoppy</string>
     <string name="title_product_detail">Product Detail</string>
     <string name="textView_product_id">Product ID</string>
+    <string name="product_detail_fields_Title_NEW">Create new Product</string>
+    <string name="product_detail_fields_Title_UPDATE">Update Product</string>
+    <string name="product_detail_fields_product_name">Product Name...</string>
+    <string name="product_detail_fields_product_description">Description...</string>
+    <string name="product_detail_fields_button_save">Save</string>
+
+
 </resources>

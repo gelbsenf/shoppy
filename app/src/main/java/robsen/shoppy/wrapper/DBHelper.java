@@ -3,15 +3,12 @@ package robsen.shoppy.wrapper;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import robsen.shoppy.objects.ProductCategory;
 
 
 /**
@@ -20,11 +17,13 @@ import robsen.shoppy.objects.ProductCategory;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final String TAG = "DATABASE OPERATIONS";
+
 
     // Properties
+    private static final String TAG = "DATABASE OPERATIONS";
     private static final String DATABASE_NAME = "shoppy.DB";
     private static final int DATABASE_VERSION = 1;
+    public static final String DATABASE_FIELD_PRIMARY_KEY = "id";
     private SQLiteDatabase sqLiteDatabase;
 
     // Methods
@@ -62,7 +61,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param fields
      */
     private void createTable(SQLiteDatabase db, String tableName, HashMap<String, String> fields) {
-        String command = "CREATE TABLE " + tableName + " ( id INTEGER PRIMARY KEY AUTOINCREMENT";
+        String command = "CREATE TABLE " + tableName + " ( +" + DATABASE_FIELD_PRIMARY_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT";
 
         for (Map.Entry<String, String> entry : fields.entrySet())
             command = command + ", " + entry.getKey() + " " + entry.getValue();
@@ -73,18 +72,28 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Inserts a new DataRow
+     * Inserts or updates a new DataRow, depending on the id field in contentValues
      * @param tableName
      * @param contentValues
      */
     public int addData(String tableName, ContentValues contentValues) {
+        int id = 0;
         this.sqLiteDatabase = this.getWritableDatabase();
         try {
-            return (int)this.sqLiteDatabase.insert(tableName, null, contentValues);
+            id = (int) this.sqLiteDatabase.insertWithOnConflict(tableName, null,
+                    contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+            if (id == -1) {
+                if (!contentValues.getAsString(DATABASE_FIELD_PRIMARY_KEY).isEmpty() && contentValues.getAsInteger(DATABASE_FIELD_PRIMARY_KEY) > 0) {
+                    id = (int) this.sqLiteDatabase.update(tableName, contentValues,
+                            "id=?", new String[]{contentValues.getAsString(DATABASE_FIELD_PRIMARY_KEY)});
+                }
+            }
+            return id;
         } catch (Exception ex) {
-            Log.e(TAG, "ERROR trying to write to: " + tableName);
+            Log.e(TAG, "ERROR trying to write to: " + tableName + " with contentValues: " + contentValues.toString());
+        } finally {
+            return id;
         }
-        return 0;
     }
 
     /**

@@ -58,7 +58,8 @@ public class ProductDetailActivity extends AppCompatActivity {
             // using a fragment transaction.
             Bundle arguments = new Bundle();
             arguments.putString(ProductDetailFragment.ARG_ID,
-                    getIntent().getStringExtra(ProductDetailFragment.ARG_ID));
+                    getIntent().getExtras().get(ProductDetailFragment.ARG_ID).toString());
+
             ProductDetailFragment fragment = new ProductDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
