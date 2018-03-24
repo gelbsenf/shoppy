@@ -7,6 +7,6 @@
     <string name="product_detail_fields_product_name">Product Name...</string>
     <string name="product_detail_fields_product_description">Description...</string>
     <string name="product_detail_fields_button_save">Save</string>
-
+    <string name="delete">DELETE</string>
 
 </resources>

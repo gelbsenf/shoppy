@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +29,7 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class ProductListActivity extends AppCompatActivity {
+public class ProductListActivity extends AppCompatActivity implements View.OnLongClickListener {
     private static final String TAG = "ProductListActivity";
 
     /**
@@ -37,6 +38,7 @@ public class ProductListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
     private ProductContent _productContent;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +57,19 @@ public class ProductListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        final View recyclerView = findViewById(R.id.product_list);
+        final View recyclerView = (View) findViewById(R.id.product_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
+
+        // On SwipeRefresh Action loads new RecyclewViewer
+        swipeRefreshLayout = this.findViewById(R.id.product_list_swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                setupRecyclerView((RecyclerView) recyclerView);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         FloatingActionButton fabAddProduct = (FloatingActionButton) findViewById(R.id.fabInsertProduct);
         fabAddProduct.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +86,11 @@ public class ProductListActivity extends AppCompatActivity {
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         this._productContent = new ProductContent(this);
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, _productContent.getItems(), mTwoPane));
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        return false;
     }
 
     public static class SimpleItemRecyclerViewAdapter

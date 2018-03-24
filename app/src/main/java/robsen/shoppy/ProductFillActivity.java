@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import robsen.shoppy.objects.Product;
 import robsen.shoppy.wrapper.DBHelper;
@@ -27,6 +28,12 @@ public class ProductFillActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_fill);
         initFields();
+
+        // add back arrow to toolbar
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         Button button_save = (Button) findViewById(R.id.button_save);
         button_save.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +114,6 @@ public class ProductFillActivity extends AppCompatActivity {
 
         return this._product.save(ProductFillActivity.this);
     }
-
 
 
 }
