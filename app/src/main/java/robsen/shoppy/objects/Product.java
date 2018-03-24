@@ -2,6 +2,7 @@ package robsen.shoppy.objects;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.util.Log;
 
 import robsen.shoppy.wrapper.DBHelper;
@@ -11,7 +12,7 @@ import robsen.shoppy.wrapper.ProductContract;
  * Created by robeschm on 15.03.2018.
  */
 
-public class Product {
+public class Product extends Object {
     private final static String TAG = "PRODUCT OPERERATIONS";
     // Properties
     private int _id;
@@ -51,8 +52,8 @@ public class Product {
 
     /**
      * Inserts this Product
-     * @param callingContext
-     * @return
+     * @param callingContext Activity conext
+     * @return success
      */
     public boolean save(Context callingContext) {
         DBHelper dbHelper = new DBHelper(callingContext);
@@ -72,7 +73,7 @@ public class Product {
 
     /**
      * Deletes this Product
-     * @return
+     * @return success
      */
     public boolean delete(Context callingContext){
         DBHelper dbHelper = new DBHelper(callingContext);
@@ -84,16 +85,31 @@ public class Product {
         return true;
     }
 
+    /**
+     * Get Product fields from SqLite Database
+     */
     private void fillInformation(){
-        // Todo: Fill information from DB
-        this._name = "dummy Name to fill";
-        this._description = "dummy Descritpiotn to fill";
+        DBHelper dbHelper = new DBHelper(this._context);
+        Log.e(TAG, "retrieving Product data ...");
+
+        Cursor productCursor =  dbHelper.getTableRow(ProductContract.TABLENAME,
+                null,
+                "id=?",
+                 new String[]{ String.valueOf(this._id) },
+                null,
+                null,
+                null);
+        if (productCursor.moveToFirst()) {
+            this._name = productCursor.getString(productCursor.getColumnIndex(ProductContract.FIELDS.NAME));
+            this._description = productCursor.getString(productCursor.getColumnIndex(ProductContract.FIELDS.DESCRIPTION));
+        }
+        productCursor.close();
     }
 
 
     // Constructors
     /**
-     * For loading in List
+     * For loading in ListActivities
      * @param id
      * @param name
      * @param description
@@ -118,9 +134,16 @@ public class Product {
      * Get ProductInfo by ID
      * @param id
      */
-    public Product(int id) {
+    public Product(int id, Context callingContext) {
         this._id = id;
+        this._context = callingContext;
         fillInformation();
+    }
+
+    /**
+     * blank
+     */
+    public Product() {
     }
 
 }

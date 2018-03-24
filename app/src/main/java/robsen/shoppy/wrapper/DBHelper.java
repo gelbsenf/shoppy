@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.HashMap;
@@ -124,6 +125,27 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         Log.e(TAG, "No Tablename given");
         return null;
+    }
+
+    /**
+     *
+     * @param tableName Name of Table
+     * @param columns array of Columns to get
+     * @param selection Where fields e.g. id=?,name=?
+     * @param selectionArgs Arguments to pass into selection placeholder
+     * @param groupBy group statement
+     * @param having having clause
+     * @param orderBy order
+     * @return Table Cursor
+     */
+    public Cursor getTableRow(String tableName, @Nullable String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
+        this.sqLiteDatabase = this.getReadableDatabase();
+        if (!tableName.isEmpty()) {
+            return this.sqLiteDatabase.query(tableName, columns, selection, selectionArgs, groupBy, having, orderBy);
+        } else {
+            Log.e(TAG, "No Tablename given");
+            return null;
+        }
     }
 
     // Constructors

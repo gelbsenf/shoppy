@@ -3,7 +3,6 @@ package robsen.shoppy;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
@@ -30,11 +29,15 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         // Update Button
         fabUpdateProduct.setOnClickListener(new View.OnClickListener() {
+            Intent passedIntent = getIntent();
+            int product_id = passedIntent.getIntExtra(ProductDetailFragment.PRODUCT_ID, -1);
+
             @Override
             public void onClick(View view) {
-                // ToDo: update Product
-                Snackbar.make(view, "Product updated", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intentUpdateProduct = new Intent(getApplicationContext(), ProductFillActivity.class);
+                intentUpdateProduct.putExtra("robsen.shoppy.UPDATE", true);
+                intentUpdateProduct.putExtra(ProductDetailFragment.PRODUCT_ID, product_id);
+                startActivity(intentUpdateProduct);
             }
         });
 
@@ -57,8 +60,8 @@ public class ProductDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(ProductDetailFragment.ARG_ID,
-                    getIntent().getExtras().get(ProductDetailFragment.ARG_ID).toString());
+            arguments.putString(ProductDetailFragment.PRODUCT_ID,
+                    getIntent().getExtras().get(ProductDetailFragment.PRODUCT_ID).toString());
 
             ProductDetailFragment fragment = new ProductDetailFragment();
             fragment.setArguments(arguments);

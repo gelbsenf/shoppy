@@ -1,6 +1,7 @@
 package robsen.shoppy;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import robsen.shoppy.objects.*;
+import robsen.shoppy.wrapper.ProductContract;
 
 /**
  * A fragment representing a single Product detail screen.
@@ -21,7 +23,7 @@ public class ProductDetailFragment extends Fragment {
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    public static final String ARG_ID = "product_id";
+    public static final String PRODUCT_ID = ProductContract.TABLENAME + "." + ProductContract.FIELDS.ID;
 
     /**
      * The dummy content this fragment is presenting.
@@ -39,15 +41,15 @@ public class ProductDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ID)) {
+        if (getArguments().containsKey(PRODUCT_ID)) {
 
             ProductContent productContent = new ProductContent(getContext());
-            _mItem = productContent.getItem_Map().get(getArguments().getString(ARG_ID));
+            _mItem = productContent.getItem_Map().get(getArguments().getString(PRODUCT_ID));
 
             // If Product not found in arguments, manually search intent for extrasField "product_id"
             if (_mItem == null) {
                 if (!this.getActivity().getIntent().getExtras().isEmpty()) {
-                    _mItem = new Product(Integer.getInteger(this.getActivity().getIntent().getExtras().get(ARG_ID).toString()));
+                    _mItem = new Product(Integer.getInteger(this.getActivity().getIntent().getExtras().get(PRODUCT_ID).toString()), getContext());
                 }
             }
 
