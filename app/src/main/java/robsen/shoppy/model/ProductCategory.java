@@ -1,4 +1,4 @@
-package robsen.shoppy.objects;
+package robsen.shoppy.model;
 
 /**
  * Created by robeschm on 15.03.2018.

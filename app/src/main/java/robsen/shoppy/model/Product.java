@@ -1,12 +1,12 @@
-package robsen.shoppy.objects;
+package robsen.shoppy.model;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
-import robsen.shoppy.wrapper.DBHelper;
-import robsen.shoppy.wrapper.ProductContract;
+import robsen.shoppy.utils.DBHelper;
+import robsen.shoppy.utils.ProductContract;
 
 /**
  * Created by robeschm on 15.03.2018.
@@ -18,6 +18,8 @@ public class Product extends Object {
     private int _id;
     private String _name;
     private String _description;
+    private boolean _favorite;
+
     private Context _context;
 
     // Methods
@@ -50,6 +52,14 @@ public class Product extends Object {
         this._description = _description;
     }
 
+    public boolean is_favorite() {
+        return _favorite;
+    }
+
+    public void set_favorite(boolean _favorite) {
+        this._favorite = _favorite;
+    }
+
     /**
      * Inserts this Product
      * @param callingContext Activity conext
@@ -63,6 +73,7 @@ public class Product extends Object {
         contentValues.put(ProductContract.FIELDS.ID, this._id);
         contentValues.put(ProductContract.FIELDS.NAME, this._name);
         contentValues.put(ProductContract.FIELDS.DESCRIPTION, this._description);
+        contentValues.put(ProductContract.FIELDS.IS_FAVORITE, (this._favorite ? 1 : 0));
 
         // Add Data to SQLite
         this._id = dbHelper.addData(ProductContract.TABLENAME, contentValues);
@@ -102,6 +113,7 @@ public class Product extends Object {
         if (productCursor.moveToFirst()) {
             this._name = productCursor.getString(productCursor.getColumnIndex(ProductContract.FIELDS.NAME));
             this._description = productCursor.getString(productCursor.getColumnIndex(ProductContract.FIELDS.DESCRIPTION));
+            this._favorite = (productCursor.getInt(productCursor.getColumnIndex(ProductContract.FIELDS.IS_FAVORITE)) == 1);
         }
         productCursor.close();
     }
@@ -114,10 +126,11 @@ public class Product extends Object {
      * @param name
      * @param description
      */
-    public Product(int id, String name, String description) {
+    public Product(int id, String name, String description, boolean favorite) {
         this._id = id;
         this._name = name;
         this._description = description;
+        this._favorite = favorite;
     }
 
     /**
@@ -125,9 +138,10 @@ public class Product extends Object {
      * @param name
      * @param description
      */
-    public Product(String name, String description) {
+    public Product(String name, String description, boolean favorite) {
         this._name = name;
         this._description = description;
+        this._favorite = favorite;
     }
 
     /**

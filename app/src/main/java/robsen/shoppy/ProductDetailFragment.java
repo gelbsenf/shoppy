@@ -1,7 +1,6 @@
 package robsen.shoppy;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,8 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import robsen.shoppy.objects.*;
-import robsen.shoppy.wrapper.ProductContract;
+import robsen.shoppy.model.*;
+import robsen.shoppy.utils.ProductContract;
 
 /**
  * A fragment representing a single Product detail screen.

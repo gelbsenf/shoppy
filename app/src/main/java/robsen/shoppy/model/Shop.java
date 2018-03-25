@@ -1,4 +1,4 @@
-package robsen.shoppy.objects;
+package robsen.shoppy.model;
 
 import java.util.List;
 

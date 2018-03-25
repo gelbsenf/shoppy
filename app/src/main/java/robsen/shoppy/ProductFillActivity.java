@@ -2,20 +2,16 @@ package robsen.shoppy;
 
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
-import robsen.shoppy.objects.Product;
-import robsen.shoppy.wrapper.DBHelper;
+import robsen.shoppy.model.Product;
 
 public class ProductFillActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package robsen.shoppy.wrapper;
+package robsen.shoppy.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,14 +11,14 @@ import android.util.Log;
 import java.util.HashMap;
 import java.util.Map;
 
+import robsen.shoppy.model.Price;
+
 
 /**
  * Created by robeschm on 15.03.2018.
  */
 
 public class DBHelper extends SQLiteOpenHelper {
-
-
 
     // Properties
     private static final String TAG = "DATABASE OPERATIONS";
@@ -35,6 +35,8 @@ public class DBHelper extends SQLiteOpenHelper {
         createTable(sqLiteDatabase, ProductContract.TABLENAME, new HashMap<String, String>() {{
             put(ProductContract.FIELDS.NAME, ProductContract.FIELD_TYPES.NAME);
             put(ProductContract.FIELDS.DESCRIPTION, ProductContract.FIELD_TYPES.DESCRIPTION);
+            put(ProductContract.FIELDS.IS_FAVORITE, ProductContract.FIELD_TYPES.IS_FAVORITE);
+            // Todo: Update DB
             }
         });
 
@@ -46,6 +48,16 @@ public class DBHelper extends SQLiteOpenHelper {
         // product_categories
         createTable(sqLiteDatabase, ProductCategoryContract.TABLENAME, new HashMap<String, String>() {{
             put(ProductCategoryContract.FIELDS.NAME, ProductCategoryContract.FIELD_TYPES.NAME);
+        }});
+
+        // Price
+        createTable(sqLiteDatabase, PriceContract.TABLENAME, new HashMap<String, String>() {{
+            put(PriceContract.FIELDS.NETTO, PriceContract.FIELD_TYPES.NETTO);
+            put(PriceContract.FIELDS.IS_OFFER, PriceContract.FIELD_TYPES.IS_OFFER);
+            put(PriceContract.FIELDS.VALID_FROM, PriceContract.FIELD_TYPES.VALID_FROM);
+            put(PriceContract.FIELDS.VALID_TO, PriceContract.FIELD_TYPES.VALID_TO);
+            put(PriceContract.FIELDS.PRODUCT_ID, PriceContract.FIELD_TYPES.PRODUCT_ID);
+            put(PriceContract.FIELDS.SHOP_ID, PriceContract.FIELD_TYPES.SHOP_ID);
         }});
 
     }

@@ -2,6 +2,7 @@ package robsen.shoppy;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -9,14 +10,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 
-import robsen.shoppy.objects.Product;
-import robsen.shoppy.objects.ProductContent;
+import robsen.shoppy.model.Product;
+import robsen.shoppy.model.ProductContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +60,7 @@ public class ProductListActivity extends AppCompatActivity implements View.OnLon
             mTwoPane = true;
         }
 
-        final View recyclerView = (View) findViewById(R.id.product_list);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.product_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
 
@@ -70,6 +73,8 @@ public class ProductListActivity extends AppCompatActivity implements View.OnLon
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+
+       creatSwipeAction(recyclerView);
 
         FloatingActionButton fabAddProduct = (FloatingActionButton) findViewById(R.id.fabInsertProduct);
         fabAddProduct.setOnClickListener(new View.OnClickListener() {
@@ -88,8 +93,37 @@ public class ProductListActivity extends AppCompatActivity implements View.OnLon
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, _productContent.getItems(), mTwoPane));
     }
 
+    // Set Swipe left action to Delete ListItem
+    private void creatSwipeAction(RecyclerView recyclerView){
+        // Swipe left to delete
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                // Todo: Delete and update
+                // Row is swiped from recycler view
+                // remove it from adapter
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                    float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                // Todo
+                // view the background view
+            }
+        };
+
+        // attaching the touch helper to recycler view
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+    }
+
     @Override
     public boolean onLongClick(View view) {
+        // Todo: implement multi checking and delete
         return false;
     }
 
@@ -147,6 +181,7 @@ public class ProductListActivity extends AppCompatActivity implements View.OnLon
             holder.mNameView.setText(mProducts.get(position).get_name());
             holder.mContentView.setText(mProducts.get(position).get_description());
 
+
             holder.itemView.setTag(mProducts.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
         }
@@ -160,12 +195,14 @@ public class ProductListActivity extends AppCompatActivity implements View.OnLon
             final TextView mIdView;
             final TextView mNameView;
             final TextView mContentView;
+            final CheckBox mFavoriteCheckBox;
 
             public ViewHolder(View view) {
                 super(view);
                 mIdView = (TextView) view.findViewById(R.id.textView_id);
                 mNameView = (TextView) view.findViewById(R.id.textView_name);
                 mContentView = (TextView) view.findViewById(R.id.textView_description);
+                mFavoriteCheckBox = (CheckBox) view.findViewById(R.id.checkBox_favorite);
             }
 
             // Update View with added content

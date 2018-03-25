@@ -1,4 +1,4 @@
-package robsen.shoppy.objects;
+package robsen.shoppy.model;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import robsen.shoppy.wrapper.DBHelper;
-import robsen.shoppy.wrapper.ProductContract;
+import robsen.shoppy.utils.DBHelper;
+import robsen.shoppy.utils.ProductContract;
 
 
 public class ProductContent {
@@ -45,7 +45,8 @@ public class ProductContent {
             Product productToAdd = new Product(
                     productCursor.getInt(productCursor.getColumnIndex(ProductContract.FIELDS.ID)),
                     productCursor.getString(productCursor.getColumnIndex(ProductContract.FIELDS.NAME)),
-                    productCursor.getString(productCursor.getColumnIndex(ProductContract.FIELDS.DESCRIPTION))
+                    productCursor.getString(productCursor.getColumnIndex(ProductContract.FIELDS.DESCRIPTION)),
+                    productCursor.getInt(productCursor.getColumnIndex(ProductContract.FIELDS.IS_FAVORITE)) == 1
             );
             addItem(productToAdd);
         }
